@@ -1,19 +1,18 @@
-import os
-from dotenv import load_dotenv
 from langchain_openai import ChatOpenAI
 from langchain_core.prompts import PromptTemplate
 from langchain_core.output_parsers import StrOutputParser
 from typing import List, Dict
 import time
+from utils import get_openrouter_api_key
 
-load_dotenv()
 
 class PDFSummarizer:
     def __init__(self):
         self.llm = ChatOpenAI(
-            model="gpt-4o-mini",
+            model="openai/gpt-4.1-mini",
             temperature=0.3,
-            api_key=os.getenv("OPENAI_API_KEY"),
+            api_key=get_openrouter_api_key(),
+            base_url="https://openrouter.ai/api/v1",
         )
 
         self.summary_prompts = {

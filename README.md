@@ -85,6 +85,14 @@ Replace `your_api_key_here` with your actual API key.
 
 **⚠️ Important:** Never share or commit your `.env` file with your API key!
 
+For Streamlit Community Cloud, open your app's **Settings > Secrets** and add:
+
+```toml
+OPENROUTER_API_KEY = "your_api_key_here"
+```
+
+After saving the secret, restart or reboot the app. The `.env` file on your computer is not deployed with the app.
+
 ### Step 5: Run the Application
 
 Start the Streamlit web application:
@@ -209,6 +217,7 @@ The app uses `tiktoken` to count tokens before sending text to the AI. This ensu
 - Make sure `.env` file exists in the project root
 - Verify the key is correctly set: `OPENROUTER_API_KEY=your_actual_key`
 - Don't use quotes around the key in `.env`
+- On Streamlit Community Cloud, add the key under **App settings > Secrets**; the local `.env` file is not available there
 
 ### "Error extracting text from PDF"
 - Ensure the PDF is not corrupted

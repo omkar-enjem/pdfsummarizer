@@ -1,6 +1,6 @@
 import streamlit as st
 import pandas as pd
-from typing import Dict, List
+from typing import Dict, List, Optional
 import json
 import time
 import os
@@ -83,20 +83,31 @@ def estimate_processing_time(num_chunks: int) -> str:
         minutes = int((estimated_seconds % 3600) // 60)
         return f"~{hours}h {minutes}m"
 
-def validate_api_key() -> bool:
-    """Validate that the API key is set"""
+def get_openrouter_api_key() -> Optional[str]:
+    """Load the OpenRouter key from the environment or Streamlit secrets."""
     load_dotenv()
-    api_key = os.getenv("OPENAI_API_KEY")
+    api_key = os.getenv("OPENROUTER_API_KEY")
+    if api_key:
+        return api_key
+
+    try:
+        return st.secrets.get("OPENROUTER_API_KEY")
+    except Exception:
+        return None
+
+
+def validate_api_key() -> bool:
+    """Validate that the OpenRouter API key is set."""
+    api_key = get_openrouter_api_key()
 
     if not api_key:
-        st.error("❌ OpenAI API key not found! Please check your .env file.")
-        st.info("1. Create a .env file in your project directory")
-        st.info("2. Add: OPENAI_API_KEY=your_api_key_here")
-        st.info("3. Get your API key from: https://platform.openai.com/api-keys")
+        st.error("❌ OpenRouter API key not found.")
+        st.info("For local runs, set OPENROUTER_API_KEY in your .env file.")
+        st.info("For Streamlit Cloud, add OPENROUTER_API_KEY in your app's Settings > Secrets.")
         return False
     elif len(api_key) < 20:
         st.error("❌ API key seems invalid. Please check if it's complete.")
         return False
     else:
-        st.success("✅ OpenAI API key loaded successfully!")
+        st.success("✅ OpenRouter API key loaded successfully!")
         return True
